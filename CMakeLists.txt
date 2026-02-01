@@ -48,6 +48,13 @@ endif()
 
 project(ase-containers VERSION ${ASE_CONTAINERS_VERSION} LANGUAGES CXX)
 
+# Generate version.hpp from template (SSOT)
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/ase/containers/version.hpp.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/include/ase/containers/version.hpp"
+    @ONLY
+)
+
 # ==============================================================================
 # BUILD CONFIGURATION
 # ==============================================================================
