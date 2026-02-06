@@ -70,6 +70,26 @@ Game engine containers: RingBuffer, SparseSet, ObjectPool, etc.
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(ase::containers ALIAS ${PROJECT_NAME})
 
+target_sources(${PROJECT_NAME} INTERFACE
+    #[[
+    PUBLIC API
+    Main entry point header that includes all container types.
+    ]]
+    include/ase/containers/containers.hpp
+
+    #[[
+    TYPES
+    Type definitions and constants for containers module.
+    ]]
+    include/ase/containers/types.hpp
+
+    #[[
+    DATA STRUCTURES
+    High-performance container implementations for game engines.
+    ]]
+    include/ase/containers/ring_buffer.hpp
+)
+
 target_include_directories(${PROJECT_NAME}
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
