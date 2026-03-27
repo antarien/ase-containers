@@ -8,9 +8,9 @@
 
 Part of [ASE - Antares Simulation Engine](../../..)
 
-## Status
+## Overview
 
-**Not Yet Implemented** - This module is a stub for future development.
+The ase-containers module provides high-performance data structures optimized for game engine patterns, replacing standard library containers where cache locality, lock-free access, or generational safety are required. Standard containers like std::vector, std::map, and std::unordered_map are general-purpose but introduce cache misses, heap fragmentation, and iterator invalidation problems that are unacceptable in a real-time ECS simulation running at 30-60 Hz. Planned containers include SparseSet for dense iteration over sparse entity data, SlotMap with generational indices to prevent use-after-free on destroyed entities, RingBuffer for lock-free single-producer/single-consumer communication between threads, FlatMap for cache-friendly hash lookups with open addressing, and SmallVector with stack-based small-size optimization to avoid heap allocation for typical component counts. As a Layer 0 foundation library, ase-containers has no ASE dependencies and provides the same guarantees as standard containers (RAII, exception safety) while being optimized for the access patterns that dominate ECS workloads: sequential iteration, random access by entity ID, and high-frequency insert/remove cycles. Each container is designed for a specific ECS access pattern — SparseSet for component storage iteration at near-array speed, SlotMap for stable entity handles that detect use-after-destroy, and RingBuffer for thread-safe message passing between the game loop and async I/O workers.
 
 ## Planned Features
 
