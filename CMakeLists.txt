@@ -12,7 +12,7 @@ ASE FOUNDATION BUILD CONFIGURATION
 @layer       0 (Foundation)
 @created     2025-12-15
 @modified    2026-01-30
-@version     00.00.04.00004 [stub]
+@version     00.00.04.00004 [seed]
 
 CMAKE MODULE COMPLIANCE
 
