@@ -39,10 +39,10 @@
 #   stable = Production ready (set manually)
 #
 # ==============================================================================
-ASE_CONTAINERS=00.00.11.00011
+ASE_CONTAINERS=00.00.12.00012
 ASE_CONTAINERS_NAME=Container Library
 ASE_CONTAINERS_DESC=RingBuffer, SparseSet, custom containers
 ASE_CONTAINERS_LAYER=0
 ASE_CONTAINERS_STATUS=poc
 ASE_CONTAINERS_CREATED=2025-12-15
-ASE_CONTAINERS_UPDATED=2026-04-08
+ASE_CONTAINERS_UPDATED=2026-04-16
