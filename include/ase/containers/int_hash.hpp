@@ -42,6 +42,7 @@
  * -----------------------------------------------------------------------------
  * @module      ase-containers
  * @layer       0 (Foundation)
+ * @category    structure/container/associative
  * @created     2026-07-16
  * @modified    2026-07-16
  * @version     1.0.0

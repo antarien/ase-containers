@@ -87,7 +87,17 @@ target_sources(${PROJECT_NAME} INTERFACE
     DATA STRUCTURES
     High-performance container implementations for game engines.
     ]]
+    include/ase/containers/array.hpp
+    include/ase/containers/hash_map.hpp
+    include/ase/containers/ordered.hpp
     include/ase/containers/ring_buffer.hpp
+    include/ase/containers/vector.hpp
+
+    #[[
+    HASHING
+    Hash functors the containers above are instantiated with.
+    ]]
+    include/ase/containers/int_hash.hpp
 )
 
 target_include_directories(${PROJECT_NAME}

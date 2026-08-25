@@ -25,9 +25,11 @@ TEST_CASE("RingBuffer - Basic Operations") {
         CHECK_FALSE(buffer.empty());
         CHECK(buffer.size() == 1);
 
-        auto val = buffer.pop();
-        CHECK(val.has_value());
-        CHECK(*val == 42);
+        // pop() schreibt in das Ziel und meldet, ob es das getan hat (umgestellt 2026-08-20,
+        // vorher std::optional). Der Test haelt das Ziel selbst.
+        int val = 0;
+        CHECK(buffer.pop(val));
+        CHECK(val == 42);
         CHECK(buffer.empty());
     }
 
@@ -47,14 +49,18 @@ TEST_CASE("RingBuffer - Basic Operations") {
         buffer.push(2);
         buffer.push(3);
 
-        CHECK(*buffer.pop() == 1);
-        CHECK(*buffer.pop() == 2);
-        CHECK(*buffer.pop() == 3);
+        int val = 0;
+        CHECK(buffer.pop(val));  CHECK(val == 1);
+        CHECK(buffer.pop(val));  CHECK(val == 2);
+        CHECK(buffer.pop(val));  CHECK(val == 3);
     }
 
     SUBCASE("Pop from empty buffer") {
-        auto val = buffer.pop();
-        CHECK_FALSE(val.has_value());
+        // Das Ziel bleibt UNBERUEHRT, wenn nichts da ist - das ist die Zusage der Signatur,
+        // und sie wird hier mitgeprueft statt nur der Rueckgabewert.
+        int val = -1;
+        CHECK_FALSE(buffer.pop(val));
+        CHECK(val == -1);
     }
 }
 
@@ -86,7 +92,8 @@ TEST_CASE("RingBuffer - Wraparound") {
         buffer.push(i);
     }
     for (int i = 0; i < 3; ++i) {
-        buffer.pop();
+        int discard = 0;
+        (void)buffer.pop(discard);  // Wert wird hier bewusst verworfen - der Test misst den Umlauf
     }
 
     // Add more (causes wraparound)
@@ -96,9 +103,9 @@ TEST_CASE("RingBuffer - Wraparound") {
 
     // Check FIFO order across wraparound
     for (int expected = 3; expected < 10; ++expected) {
-        auto val = buffer.pop();
-        CHECK(val.has_value());
-        CHECK(*val == expected);
+        int val = 0;
+        CHECK(buffer.pop(val));
+        CHECK(val == expected);
     }
 }
 
@@ -121,10 +128,10 @@ TEST_CASE("RingBuffer - Emplace") {
     RingBuffer<Point, 8> buffer;
     CHECK(buffer.emplace(1.0f, 2.0f));
 
-    auto val = buffer.pop();
-    CHECK(val.has_value());
-    CHECK(val->x == 1.0f);
-    CHECK(val->y == 2.0f);
+    Point val{0.0f, 0.0f};
+    CHECK(buffer.pop(val));
+    CHECK(val.x == 1.0f);
+    CHECK(val.y == 2.0f);
 }
 
 TEST_CASE("RingBuffer - Move semantics") {
@@ -144,9 +151,12 @@ TEST_CASE("RingBuffer - Move semantics") {
     RingBuffer<MoveOnly, 8> buffer;
     buffer.push(MoveOnly{42});
 
-    auto val = buffer.pop();
-    CHECK(val.has_value());
-    CHECK(val->value == 42);
+    // MoveOnly hat einen Move-Zuweisungsoperator - genau den braucht die neue Signatur, weil
+    // pop() in das Ziel HINEIN zuweist statt einen Wert zurueckzugeben. Der Fall steht hier
+    // absichtlich: er ist der einzige, der die Anforderung an T sichtbar macht.
+    MoveOnly val{0};
+    CHECK(buffer.pop(val));
+    CHECK(val.value == 42);
 }
 
 TEST_CASE("RingBuffer - SPSC Thread Safety") {
@@ -170,8 +180,9 @@ TEST_CASE("RingBuffer - SPSC Thread Safety") {
     std::thread consumer([&]() {
         int expected = 0;
         while (!done || !buffer.empty()) {
-            if (auto val = buffer.pop()) {
-                CHECK(*val == expected);
+            int val = 0;
+            if (buffer.pop(val)) {
+                CHECK(val == expected);
                 ++expected;
                 ++consumed;
             } else {
