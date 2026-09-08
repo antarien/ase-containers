@@ -11,8 +11,8 @@ ASE FOUNDATION BUILD CONFIGURATION
 @module      ase-containers
 @layer       0 (Foundation)
 @created     2025-12-15
-@modified    2026-01-30
-@version     00.00.04.00004 [seed]
+@modified    2026-09-08
+@version     00.00.17.00017 [init]
 
 CMAKE MODULE COMPLIANCE
 
