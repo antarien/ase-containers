@@ -1,8 +1,32 @@
 /**
- * RingBuffer Unit Tests
+ * =============================================================================
+ * ASE CONTAINERS - RingBuffer Unit Tests
+ * =============================================================================
+ *
+ * @file        ring_buffer_test.cpp
+ * @brief       Cases for the fixed-capacity ring buffer, single- and multi-threaded.
+ * @description Deckt die Grundoperationen der Festkapazitaets-Ringpuffer ab sowie das
+ *              Verhalten an seinen beiden Raendern — der volle Puffer und der leere.
+ *
+ *              DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN wird vom Bau gesetzt
+ *              (tests/CMakeLists.txt, target_compile_definitions am Ziel ase-containers-test)
+ *              statt hier als #define. Der Define ist eine Eigenschaft des ZIELS: er
+ *              entscheidet, welche Uebersetzungseinheit das main() bekommt, und dieses Ziel
+ *              hat genau eine. Wer die Datei liest und das main sucht, findet es dort.
+ *
+ * -----------------------------------------------------------------------------
+ * META
+ * -----------------------------------------------------------------------------
+ * @module      ase-containers
+ * @layer       0 (Foundation)
+ * @category    structure/container/sequential
+ * @created     2026-01-07
+ * @modified    2026-08-25
+ * @version     1.0.0
+ *
+ * =============================================================================
  */
 
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
 #include <ase/containers/ring_buffer.hpp>
 #include <thread>
