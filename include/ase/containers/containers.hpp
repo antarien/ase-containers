@@ -4,6 +4,7 @@
  * ASE CORE INFRASTRUCTURE HEADER
  *
  * @file        containers.hpp
+ * @design      DSGN_016
  * @brief       Main include for ase-containers module
  * @description High-performance data structures optimized for game engine
  *              workloads. Provides ECS-friendly containers with cache-optimal
