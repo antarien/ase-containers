@@ -1,9 +1,7 @@
 #pragma once
 
 /**
- * =============================================================================
- * ASE CONTAINERS - INTEGER MIX HASH
- * =============================================================================
+ * ASE CORE INFRASTRUCTURE HEADER
  *
  * @file        int_hash.hpp
  * @brief       IntMixHash - streuender Hash-Functor fuer Integer-Schluessel (Foundation SSOT)
@@ -20,11 +18,10 @@
  *              fast leerer Tabelle, libcuckoo wirft load_factor_too_low, niemand
  *              faengt es, std::terminate beendet den Prozess.
  *
- *              LIVE 2026-07-16: Engine exit 134 direkt nach "Almanach sent
- *              (21983 entries)" — der Hub-Verbund-Schluessel (owner<<32)|value_id
- *              mit vielen Ownern je value_id kollabierte genau so. Die Reasoning-
- *              Request-Indizes (vault/memory/quota) tragen dasselbe Muster
- *              (getaggte 64-Bit-Ids, siehe VLT_SEED_REQ_ID = 0x5EED...0024).
+ *              Der Hub-Verbund-Schluessel (owner<<32)|value_id mit vielen Ownern
+ *              je value_id kollabiert genau so und beendet die Engine mit Exit 134.
+ *              Die Reasoning-Request-Indizes (vault/memory/quota) tragen dasselbe
+ *              Muster (getaggte 64-Bit-Ids, siehe VLT_SEED_REQ_ID = 0x5EED...0024).
  *
  *              splitmix64-Finalizer: mischt ALLE Bits in die unteren, sodass
  *              owner UND value_id (bzw. jede Komponente eines Verbund-Schluessels)
@@ -37,17 +34,43 @@
  *              per PLAN_ASE_COMPUTE.md:246 (kein make_owner/Owner-Bit-Tagging am
  *              gespeicherten Key — hier wird der Key nicht angefasst).
  *
- * -----------------------------------------------------------------------------
- * META
- * -----------------------------------------------------------------------------
+ *              Ein Schluessel aus Text oder Bytes bekommt keinen Hash aus dieser
+ *              Bibliothek: dafuer steht entt::hashed_string (FNV-1a 32 Bit) im Baum.
+ *
  * @module      ase-containers
  * @layer       0 (Foundation)
  * @category    structure/container/associative
+ * @usecase     usecase:100837 - choose an index key hash
  * @created     2026-07-16
- * @modified    2026-07-16
- * @version     1.0.0
+ * @modified    2026-10-15
+ * @version     1.0.1
  *
- * =============================================================================
+ * LAYER RULES:
+ *   Layer 0 (Foundation): NO dependencies on other ASE modules (only std::)
+ *
+ * USAGE:
+ *   #include <ase/containers/int_hash.hpp>
+ *   libcuckoo::cuckoohash_map<uint64_t, V, ase::containers::IntMixHash> map;
+ *
+ * CORE INFRASTRUCTURE COMPLIANCE
+ *
+ * [ ] NOT an ECS Component or System
+ * [ ] Layer dependencies correct (L0: no ASE deps, L1: L0 only)
+ * [ ] No global mutable state (constexpr/const only)
+ * [ ] No singletons or static mutable variables
+ * [ ] Thread-safe by design (pure functions or explicit mutex)
+ * [ ] All public functions documented with @brief, @param, @return
+ * [ ] constexpr where possible (compile-time evaluation)
+ * [ ] noexcept where possible (no-throw guarantee)
+ * [ ] [[nodiscard]] on functions returning values
+ * [ ] No magic numbers (use named constants)
+ * [ ] No implicit conversions (use explicit constructors)
+ * [ ] Header-only OR header+cpp pattern (not mixed)
+ * [ ] Include guards via #pragma once
+ * [ ] Namespace matches module: ase::{module}
+ * [ ] No circular dependencies
+ * [ ] No macros (except include guards) - use constexpr/templates
+ * [ ] API stable (changes require version bump)
  */
 
 #include <cstddef>
