@@ -1,61 +1,51 @@
 #pragma once
 
 /**
- * =============================================================================
  * ASE CONTAINERS - ARRAY
- * =============================================================================
  *
  * @file        array.hpp
  * @brief       Array - fixed-size contiguous array (Foundation SSOT)
  * @description Single source of truth for fixed-capacity stack arrays. No heap
  *              allocation, size is a compile-time constant, and the storage is a
  *              plain C array so the type stays an aggregate: `Array<char, 32> x{};`
- *              zero-initialises, copies copy, and it may sit in a Component.
+ *              zero-initialises, assignment takes every element along, and it may
+ *              sit in a Component.
  *
- *              WAS ES BIS ZUM 2026-08-22 WAR: ein Alias auf den Standardtyp. Der
- *              Alias verdeckte die Kopplung, statt sie aufzuloesen — jede Datei, die
- *              `containers::Array` schrieb, zog den verbotenen Typ mit, und die
- *              Regel meldete ihn genau hier, im Fundament, wo er alle trifft.
+ * THE METHOD SET, MEASURED ACROSS THE TREE
  *
- * -----------------------------------------------------------------------------
- * DIE MENGE DER METHODEN, VORHER GEGEN NACHHER — gemessen, nicht geschaetzt
- * -----------------------------------------------------------------------------
- *              Baumweit gezaehlt wurde, was die Verbraucher an dem Typ WIRKLICH
- *              anfassen (25 Dateien, 36 Nennungen, Kommentare entfernt):
+ *              Counted was what the consumers REALLY touch on the type (25 files,
+ *              36 mentions, comments removed):
  *
- *                data()        34   Netzwerkpuffer, die an Sendefunktionen gehen
+ *                data()        34   network buffers handed to send functions
  *                operator[]    21
  *                size()        11
  *                fill()         1   `accumulators_.fill(0.0f)` in tick_scheduler.cpp
  *
- *              MEHR NICHT. Kein Bereichs-for, kein Vergleich, kein at/front/back/
- *              empty, keine Iteratoren, kein std::get, keine strukturierte Bindung,
- *              keine value_type/size_type. Jede dieser Formen wurde eigens gesucht,
- *              weil eine Punkt-Sonde sie nicht sieht: `for (x : a)` und `a == b`
- *              tragen keinen Methodennamen.
+ *              NOTHING ELSE. No range-for, no comparison, no at/front/back/empty, no
+ *              iterators, no std::get, no structured binding, no value_type/size_type.
+ *              Each of these forms was searched for on its own, because a dot probe
+ *              does not see them: `for (x : a)` and `a == b` carry no method name.
  *
- *              GETRAGEN werden hier: data, size, operator[], fill — und zusaetzlich
- *              begin/end, weil ein festes Feld sie geschenkt hergibt und ihr Fehlen
- *              genau die stille Sorte Bruch waere, die kein Tor meldet.
+ *              CARRIED here: data, size, operator[], fill - and in addition
+ *              begin/end, because a fixed field gives them for free and their absence
+ *              would be exactly the silent kind of break no gate reports.
  *
- *              NICHT GETRAGEN, ausdruecklich und namentlich: at() (wirft, und
- *              Ausnahmen sind hier nicht die Fehlerform), front/back/empty/max_size/
- *              swap, Rueckwaerts-Iteratoren, die Vergleichsoperatoren und die
- *              Tupel-Schnittstelle (std::get, tuple_size). Fuer JEDE dieser Formen
- *              ist gemessen, dass sie heute im Baum null Rufer hat. Wer eine
- *              braucht, ergaenzt sie hier MIT seiner Aufrufstelle.
+ *              NOT CARRIED, explicitly and by name: at() (it throws, and exceptions
+ *              are not the error form here), front/back/empty/max_size/swap, reverse
+ *              iterators, the comparison operators and the tuple interface (std::get,
+ *              tuple_size). For EACH of these forms it is measured that it has zero
+ *              callers in the tree. Whoever needs one adds it here WITH the call site.
  *
- * -----------------------------------------------------------------------------
  * META
- * -----------------------------------------------------------------------------
+ *
  * @module      ase-containers
  * @layer       0 (Foundation)
  * @category    structure/container/sequential
+ * @usecase     usecase:101066 - accumulate values per owner
+ * @actor       Foundation Container Steward (FOUNCONSTE)
  * @created     2026-06-06
- * @modified    2026-08-22
- * @version     2.0.0
- *
- * =============================================================================
+ * @modified    2026-10-30
+ * @version     2.0.1
  */
 
 #include <cstddef>

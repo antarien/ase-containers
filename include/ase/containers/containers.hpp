@@ -8,7 +8,9 @@
  * @brief       Main include for ase-containers module
  * @description High-performance data structures optimized for game engine
  *              workloads. Provides ECS-friendly containers with cache-optimal
- *              iteration and lock-free multi-threaded patterns.
+ *              iteration and lock-free multi-threaded patterns. One include brings every
+ *              container and the hash they are instantiated with;
+ *              tests/containers_umbrella_test.cpp includes this header alone and drives each type.
  *
  *              Containers:
  *                RingBuffer<T, N>      - Lock-free SPSC circular buffer
@@ -20,21 +22,13 @@
  *                Array<T, N>           - Fixed-size contiguous array (SSOT)
  *                Pair<A, B>            - Two-field tuple (SSOT)
  *
- *              REMOVED 2026-08-20, and the reason is written here rather than left to be
- *              re-derived, because a list of containers is exactly where a deleted type
- *              goes on being advertised:
- *                SparseSet<T>  - had no header at all. Deleted 2026-01-07 by commit
- *                                1ccd266 "Remove sparse_set, keep ring_buffer only"; this
- *                                block kept listing it among the PRESENT types for seven
- *                                months.
- *                Deque<T>      - measured tree-wide: 0 code users, 0 mentions. sequence.hpp
- *                List<T>         was included by exactly one file (this one), and this one
- *                                by nobody. std::deque and std::list appear only inside
- *                                validator fixtures, so the need does not exist either -
- *                                and the forbidding rules point elsewhere for the remedy:
- *                                STD_DEQUE_FORBIDDEN says "Use ase::containers::RingBuffer",
- *                                STD_LIST_FORBIDDEN says "Use Entity-per-Item Pattern".
- *                                Neither named these aliases.
+ *              Hashing:
+ *                IntMixHash            - Scattering hash for integer and composite integer keys
+ *                                        (usecase:100837 choose an index key hash)
+ *
+ *              No Deque, no List and no SparseSet: a queue is RingBuffer (the remedy
+ *              STD_DEQUE_FORBIDDEN names), a list of N things is one entity per item (the
+ *              remedy STD_LIST_FORBIDDEN names).
  *
  *              Planned:
  *                SlotMap<T>            - Generational indices (use-after-free safe)
@@ -45,9 +39,11 @@
  * @module      ase-containers
  * @layer       0 (Foundation)
  * @category    structure/container/sequential
+ * @usecase     usecase:100035 - compile used headers
+ * @actor       Tier Build Orchestrator (TIERBUIORC)
  * @created     2026-01-07
- * @modified    2026-08-20
- * @version     1.1.0
+ * @modified    2026-10-31
+ * @version     1.2.1
  *
  * CORE INFRASTRUCTURE COMPLIANCE
  *
@@ -70,19 +66,18 @@
  * [ ] API stable (changes require version bump)
  */
 
-// =============================================================================
 // Types (SSOT)
-// =============================================================================
 #include <ase/containers/types.hpp>
 
-// =============================================================================
 // Containers
-// =============================================================================
 #include <ase/containers/ring_buffer.hpp>
 #include <ase/containers/vector.hpp>
 #include <ase/containers/hash_map.hpp>
 #include <ase/containers/ordered.hpp>
 #include <ase/containers/array.hpp>
+
+// Hashing
+#include <ase/containers/int_hash.hpp>
 
 namespace ase::containers {
 

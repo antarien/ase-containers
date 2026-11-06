@@ -1,30 +1,25 @@
 /**
- * =============================================================================
  * ASE CONTAINERS - RingBuffer Unit Tests
- * =============================================================================
  *
  * @file        ring_buffer_test.cpp
  * @brief       Cases for the fixed-capacity ring buffer, single- and multi-threaded.
- * @description Deckt die Grundoperationen der Festkapazitaets-Ringpuffer ab sowie das
- *              Verhalten an seinen beiden Raendern — der volle Puffer und der leere.
+ * @description Covers the basic operations of the fixed-capacity ring buffer and its behaviour at
+ *              both of its edges — the full buffer and the empty one.
  *
- *              DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN wird vom Bau gesetzt
- *              (tests/CMakeLists.txt, target_compile_definitions am Ziel ase-containers-test)
- *              statt hier als #define. Der Define ist eine Eigenschaft des ZIELS: er
- *              entscheidet, welche Uebersetzungseinheit das main() bekommt, und dieses Ziel
- *              hat genau eine. Wer die Datei liest und das main sucht, findet es dort.
+ *              DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN is set by the build (tests/CMakeLists.txt,
+ *              target_compile_definitions on the target ase-containers-test) instead of here as a
+ *              #define. The define is a property of the TARGET: it decides which translation unit
+ *              receives main(), and this target has exactly one. Whoever reads this file looking
+ *              for main() finds it there.
  *
- * -----------------------------------------------------------------------------
- * META
- * -----------------------------------------------------------------------------
  * @module      ase-containers
  * @layer       0 (Foundation)
  * @category    structure/container/sequential
+ * @usecase     usecase:101396 - assure engine component quality
+ * @actor       Engine Unit Test (ENGUTEST)
  * @created     2026-01-07
- * @modified    2026-08-25
- * @version     1.0.0
- *
- * =============================================================================
+ * @modified    2026-11-05
+ * @version     1.0.1
  */
 
 #include <doctest/doctest.h>
@@ -49,8 +44,8 @@ TEST_CASE("RingBuffer - Basic Operations") {
         CHECK_FALSE(buffer.empty());
         CHECK(buffer.size() == 1);
 
-        // pop() schreibt in das Ziel und meldet, ob es das getan hat (umgestellt 2026-08-20,
-        // vorher std::optional). Der Test haelt das Ziel selbst.
+        // pop() writes into the target and reports whether it did (changed 2026-08-20, before that
+        // std::optional). The test holds the target itself.
         int val = 0;
         CHECK(buffer.pop(val));
         CHECK(val == 42);
@@ -80,8 +75,8 @@ TEST_CASE("RingBuffer - Basic Operations") {
     }
 
     SUBCASE("Pop from empty buffer") {
-        // Das Ziel bleibt UNBERUEHRT, wenn nichts da ist - das ist die Zusage der Signatur,
-        // und sie wird hier mitgeprueft statt nur der Rueckgabewert.
+        // The target stays UNTOUCHED when there is nothing to pop - that is the promise of the
+        // signature, and it is checked here along with the return value.
         int val = -1;
         CHECK_FALSE(buffer.pop(val));
         CHECK(val == -1);
@@ -117,7 +112,7 @@ TEST_CASE("RingBuffer - Wraparound") {
     }
     for (int i = 0; i < 3; ++i) {
         int discard = 0;
-        (void)buffer.pop(discard);  // Wert wird hier bewusst verworfen - der Test misst den Umlauf
+        (void)buffer.pop(discard);  // the value is dropped on purpose - the test measures the wraparound
     }
 
     // Add more (causes wraparound)
@@ -175,9 +170,9 @@ TEST_CASE("RingBuffer - Move semantics") {
     RingBuffer<MoveOnly, 8> buffer;
     buffer.push(MoveOnly{42});
 
-    // MoveOnly hat einen Move-Zuweisungsoperator - genau den braucht die neue Signatur, weil
-    // pop() in das Ziel HINEIN zuweist statt einen Wert zurueckzugeben. Der Fall steht hier
-    // absichtlich: er ist der einzige, der die Anforderung an T sichtbar macht.
+    // MoveOnly has a move assignment operator - exactly what the signature needs, because pop()
+    // assigns INTO the target instead of returning a value. The case stands here on purpose: it is
+    // the only one that makes this requirement on T visible.
     MoveOnly val{0};
     CHECK(buffer.pop(val));
     CHECK(val.value == 42);

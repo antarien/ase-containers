@@ -1,29 +1,26 @@
 #pragma once
 
 /**
- * =============================================================================
  * ASE CONTAINERS - VECTOR
- * =============================================================================
  *
  * @file        vector.hpp
  * @brief       Vector - dynamic contiguous array (Foundation SSOT)
  * @description Single source of truth for growable contiguous arrays. Wraps the
  *              standard dynamic array so that ECS Resource Managers and other
  *              consumers depend on ase-containers, never on std:: directly
- *              (mirrors ase-json's `Json`). Heap-backed, contiguous storage,
- *              amortised-O(1) append, random access.
+ *              (the same wrapper form as ase-json's `Json`). Heap-backed,
+ *              contiguous storage, amortised-O(1) append, random access.
  *
- * -----------------------------------------------------------------------------
  * META
- * -----------------------------------------------------------------------------
+ *
  * @module      ase-containers
  * @layer       0 (Foundation)
  * @category    structure/container/sequential
+ * @usecase     usecase:101066 - accumulate values per owner
+ * @actor       Foundation Container Steward (FOUNCONSTE)
  * @created     2026-06-06
- * @modified    2026-06-06
- * @version     1.0.0
- *
- * =============================================================================
+ * @modified    2026-10-30
+ * @version     1.0.1
  */
 
 #include <vector>
