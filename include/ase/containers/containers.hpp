@@ -43,7 +43,11 @@
  * @actor       Tier Build Orchestrator (TIERBUIORC)
  * @created     2026-01-07
  * @modified    2026-10-31
- * @version     1.2.1
+ * @version     00.00.19.00019 [init]
+ *
+ * Copyright (c) Jan Ohlmann. All rights reserved.
+ * Licensed to ANTARES SIMULACAO LTDA. Use is governed by LICENSE.md and PJV.md in this repository.
+ * SPDX-License-Identifier: LicenseRef-ASE-LIC
  *
  * CORE INFRASTRUCTURE COMPLIANCE
  *

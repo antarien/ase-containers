@@ -43,7 +43,11 @@
  * @usecase     usecase:100837 - choose an index key hash
  * @created     2026-07-16
  * @modified    2026-10-15
- * @version     1.0.1
+ * @version     00.00.19.00019 [init]
+ *
+ * Copyright (c) Jan Ohlmann. All rights reserved.
+ * Licensed to ANTARES SIMULACAO LTDA. Use is governed by LICENSE.md and PJV.md in this repository.
+ * SPDX-License-Identifier: LicenseRef-ASE-LIC
  *
  * LAYER RULES:
  *   Layer 0 (Foundation): NO dependencies on other ASE modules (only std::)
